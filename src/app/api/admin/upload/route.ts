@@ -13,19 +13,22 @@ export async function POST(request: Request) {
 
     const validTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
     if (!validTypes.includes(file.type)) {
-      return NextResponse.json({ error: "Invalid file type" }, { status: 400 });
+      return NextResponse.json({ error: `Invalid file type: ${file.type}` }, { status: 400 });
     }
 
     const ext = file.name.split(".").pop() ?? "jpg";
     const filename = `avatar-${Date.now()}.${ext}`;
 
-    // Use Vercel Blob in production, local filesystem in development
     if (process.env.BLOB_READ_WRITE_TOKEN) {
       const { put } = await import("@vercel/blob");
-      const blob = await put(`uploads/${filename}`, file, { access: "public" });
+      const blob = await put(`uploads/${filename}`, file, {
+        access: "public",
+        contentType: file.type,
+      });
       return NextResponse.json({ url: blob.url });
     }
 
+    // Local dev: write to public/uploads
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
     const uploadDir = path.join(process.cwd(), "public", "uploads");
@@ -33,7 +36,8 @@ export async function POST(request: Request) {
     await writeFile(path.join(uploadDir, filename), buffer);
     return NextResponse.json({ url: `/uploads/${filename}` });
   } catch (error) {
-    console.error("Upload error:", error);
-    return NextResponse.json({ error: "Upload failed" }, { status: 500 });
+    const msg = error instanceof Error ? error.message : String(error);
+    console.error("Photo upload error:", msg);
+    return NextResponse.json({ error: msg }, { status: 500 });
   }
 }
