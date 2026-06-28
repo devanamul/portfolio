@@ -1,0 +1,120 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Profile {
+  id        Int    @id @default(autoincrement())
+  name      String @default("")
+  title     String @default("")
+  summary   String @default("")
+  phone     String @default("")
+  email     String @default("")
+  linkedin  String @default("")
+  github    String @default("")
+  location  String @default("")
+  photo_url String @default("/uploads/default-avatar.png")
+  cv_url    String @default("")
+  titles    String @default("[\"Full-Stack Software Engineer\",\"Laravel Expert\",\"React Developer\",\"Next.js Engineer\"]")
+
+  @@map("profile")
+}
+
+model Skill {
+  id            Int    @id @default(autoincrement())
+  category      String
+  name          String
+  display_order Int    @default(0)
+
+  @@map("skills")
+}
+
+model Experience {
+  id            Int     @id @default(autoincrement())
+  title         String
+  company       String
+  company_url   String  @default("")
+  location      String  @default("")
+  start_date    String
+  end_date      String  @default("")
+  is_current    Boolean @default(false)
+  tech          String  @default("")
+  bullets       String  @default("[]")
+  display_order Int     @default(0)
+
+  @@map("experience")
+}
+
+model Project {
+  id            Int    @id @default(autoincrement())
+  name          String
+  tech          String @default("")
+  live_url      String @default("")
+  github_url    String @default("")
+  description   String @default("")
+  display_order Int    @default(0)
+
+  @@map("projects")
+}
+
+model Education {
+  id          Int    @id @default(autoincrement())
+  degree      String
+  institution String
+  location    String @default("")
+  start_year  String @default("")
+  end_year    String @default("")
+
+  @@map("education")
+}
+
+model Certification {
+  id            Int    @id @default(autoincrement())
+  name          String
+  issuer        String
+  year          String @default("")
+  url           String @default("")
+  display_order Int    @default(0)
+
+  @@map("certifications")
+}
+
+model Leadership {
+  id            Int    @id @default(autoincrement())
+  role          String
+  organization  String
+  display_order Int    @default(0)
+
+  @@map("leadership")
+}
+
+model Publication {
+  id    Int    @id @default(autoincrement())
+  title String
+  url   String @default("")
+
+  @@map("publications")
+}
+
+model AdminUser {
+  id            Int    @id @default(autoincrement())
+  username      String @unique
+  password_hash String
+
+  @@map("admin_users")
+}
+
+model ContactMessage {
+  id         Int    @id @default(autoincrement())
+  name       String
+  email      String
+  subject    String @default("")
+  message    String
+  created_at String @default("")
+
+  @@map("contact_messages")
+}
