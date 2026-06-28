@@ -27,6 +27,8 @@ export default function ProfileAdmin() {
   const [uploading, setUploading] = useState(false);
   const [cvUploading, setCvUploading] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [uploadError, setUploadError] = useState("");
+  const [cvUploadError, setCvUploadError] = useState("");
   const fileRef = useRef<HTMLInputElement>(null);
   const cvFileRef = useRef<HTMLInputElement>(null);
 
@@ -55,15 +57,29 @@ export default function ProfileAdmin() {
     setTimeout(() => setSaved(false), 2000);
   };
 
+  const persistField = async (key: string, value: string) => {
+    await fetch("/api/admin/profile", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ [key]: value }),
+    });
+  };
+
   const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     setUploading(true);
+    setUploadError("");
     const fd = new FormData();
     fd.append("file", file);
     const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
     const data = await res.json();
-    if (data.url) setForm((f) => ({ ...f, photo_url: data.url }));
+    if (data.url) {
+      setForm((f) => ({ ...f, photo_url: data.url }));
+      await persistField("photo_url", data.url);
+    } else {
+      setUploadError(data.error ?? "Photo upload failed");
+    }
     setUploading(false);
     e.target.value = "";
   };
@@ -72,11 +88,17 @@ export default function ProfileAdmin() {
     const file = e.target.files?.[0];
     if (!file) return;
     setCvUploading(true);
+    setCvUploadError("");
     const fd = new FormData();
     fd.append("file", file);
     const res = await fetch("/api/admin/upload-cv", { method: "POST", body: fd });
     const data = await res.json();
-    if (data.url) setForm((f) => ({ ...f, cv_url: data.url }));
+    if (data.url) {
+      setForm((f) => ({ ...f, cv_url: data.url }));
+      await persistField("cv_url", data.url);
+    } else {
+      setCvUploadError(data.error ?? "CV upload failed");
+    }
     setCvUploading(false);
     e.target.value = "";
   };
@@ -145,6 +167,7 @@ export default function ProfileAdmin() {
             <p className="text-gray-400 text-xs mt-2">JPEG, PNG, WebP — max 5MB</p>
           </div>
         </div>
+        {uploadError && <p className="mt-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">{uploadError}</p>}
       </div>
 
       {/* CV Upload */}
@@ -180,6 +203,7 @@ export default function ProfileAdmin() {
             <p className="text-gray-400 text-xs mt-2">PDF only — max 10MB</p>
           </div>
         </div>
+        {cvUploadError && <p className="mt-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">{cvUploadError}</p>}
       </div>
 
       {/* Typewriter Titles */}
