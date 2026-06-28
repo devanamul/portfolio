@@ -3,7 +3,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
   User, Code2, Briefcase, FolderGit2, GraduationCap, Award,
-  Users, BookOpen, MessageSquare, LogOut, LayoutDashboard
+  Users, BookOpen, MessageSquare, LogOut, LayoutDashboard, Settings
 } from "lucide-react";
 
 const navItems = [
@@ -16,6 +16,7 @@ const navItems = [
   { href: "/admin/leadership", icon: Users, label: "Leadership" },
   { href: "/admin/publications", icon: BookOpen, label: "Publications" },
   { href: "/admin/messages", icon: MessageSquare, label: "Messages" },
+  { href: "/admin/settings", icon: Settings, label: "Settings" },
 ];
 
 export default function Sidebar() {
