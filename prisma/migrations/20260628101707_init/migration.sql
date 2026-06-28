@@ -10,7 +10,8 @@ CREATE TABLE "profile" (
     "github" TEXT NOT NULL DEFAULT '',
     "location" TEXT NOT NULL DEFAULT '',
     "photo_url" TEXT NOT NULL DEFAULT '/uploads/default-avatar.png',
-    "cv_url" TEXT NOT NULL DEFAULT ''
+    "cv_url" TEXT NOT NULL DEFAULT '',
+    "titles" TEXT NOT NULL DEFAULT '["Full-Stack Software Engineer","Laravel Expert","React Developer","Next.js Engineer"]'
 );
 
 -- CreateTable
