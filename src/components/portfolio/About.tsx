@@ -6,7 +6,7 @@ import type { Profile } from "@/lib/types";
 const fadeUp = { hidden: { opacity: 0, y: 36 }, visible: { opacity: 1, y: 0 } };
 
 const STATS = [
-  { icon: Briefcase,  value: "2+",  label: "Years Experience" },
+  { icon: Briefcase,  value: "3+",  label: "Years Experience" },
   { icon: FolderGit2, value: "10+", label: "Projects Delivered" },
   { icon: Code2,      value: "15+", label: "Technologies" },
   { icon: Building2,  value: "4",   label: "Companies" },
